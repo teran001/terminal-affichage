@@ -12,6 +12,8 @@
       font-size: 1.2em;
       white-space: pre-line;
     }
+    .yellow { color: #FFD700; } /* Jaune or, bien lisible */
+    .green { color: lime; }
   </style>
 </head>
 <body>
@@ -19,30 +21,34 @@
 
   <script>
     const terminal = document.getElementById("terminal");
+
     const lines = [
-      "Connexion à la base de donnée impériale.......................................................<span style='color:yellow;'>EN COURS</span>",
-      "Authentification................................................................................................<span style='color:lime;'>REUSSIE</span>"
+      { text: "Connexion à la base de donnée impériale.......................................................", end: "EN COURS", class: "yellow" },
+      { text: "Authentification................................................................................................", end: "REUSSIE", class: "green" }
     ];
+
     let lineIndex = 0;
     let charIndex = 0;
-    let currentLine = '';
-    let tempLine = '';
+    let isTypingEnd = false;
 
     function typeLine() {
       if (lineIndex >= lines.length) return;
-      currentLine = lines[lineIndex];
-      if (charIndex < currentLine.length) {
-        const char = currentLine.charAt(charIndex);
-        tempLine += char;
-        terminal.innerHTML = terminal.innerHTML.replace(/<\/?span.*?>/g, '') + char;
+
+      const line = lines[lineIndex];
+
+      if (charIndex < line.text.length) {
+        terminal.innerHTML += line.text.charAt(charIndex);
         charIndex++;
         setTimeout(typeLine, 15);
-      } else {
-        terminal.innerHTML = terminal.innerHTML.slice(0, -tempLine.length) + currentLine + "\n";
-        tempLine = '';
-        charIndex = 0;
-        lineIndex++;
-        setTimeout(typeLine, 500);
+      } else if (!isTypingEnd) {
+        terminal.innerHTML += `<span class="${line.class}">${line.end}</span>\n`;
+        isTypingEnd = true;
+        setTimeout(() => {
+          lineIndex++;
+          charIndex = 0;
+          isTypingEnd = false;
+          typeLine();
+        }, 500);
       }
     }
 
