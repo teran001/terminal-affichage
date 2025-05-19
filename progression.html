@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Terminal impérial</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: monospace;
+      padding: 20px;
+      font-size: 1.2em;
+      white-space: pre;
+    }
+
+    .green {
+      color: lime;
+    }
+
+    .blink {
+      animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+
+  <script>
+    const terminal = document.getElementById("terminal");
+
+    function simulateProgress(label, callback) {
+      let percent = 0;
+
+      function step() {
+        const line = document.createElement("div");
+        line.textContent = `${label} ${percent}%`;
+        terminal.appendChild(line);
+        percent++;
+        if (percent <= 100) {
+          setTimeout(step, 20); // 20ms entre chaque %
+        } else {
+          callback();
+        }
+      }
+
+      step();
+    }
+
+    function showMessage(text, color, blink = false) {
+      const
