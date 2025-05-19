@@ -29,40 +29,26 @@
 </head>
 <body>
   <div id="terminal">
-    <div id="line1"></div>
-    <div id="status1" class="green" style="display: none;">Connexion établie</div>
-    <div id="line2"></div>
-    <div id="status2" class="green blink" style="display: none;">Authentification confirmée</div>
+    <div>Connexion à la base de donnée impériale en cours : <span id="progress1">0%</span></div>
+    <div id="status1" class="green" style="display:none;">Connexion établie</div>
+    <div>Authentification en cours : <span id="progress2">0%</span></div>
+    <div id="status2" class="green blink" style="display:none;">Authentification confirmée</div>
   </div>
 
   <script>
-    const line1 = document.getElementById("line1");
-    const line2 = document.getElementById("line2");
-    const status1 = document.getElementById("status1");
-    const status2 = document.getElementById("status2");
+    const p1 = document.getElementById("progress1");
+    const p2 = document.getElementById("progress2");
+    const s1 = document.getElementById("status1");
+    const s2 = document.getElementById("status2");
 
-    function updatePercentage(lineElement, label, callback) {
+    function updatePercent(span, statusElement, callback) {
       let percent = 0;
       const interval = setInterval(() => {
-        lineElement.textContent = `${label} ${percent}%`;
+        span.textContent = percent + "%";
         percent++;
         if (percent > 100) {
           clearInterval(interval);
-          callback();
+          statusElement.style.display = "block";
+          if (callback) callback();
         }
-      }, 30);
-    }
-
-    function startSequence() {
-      updatePercentage(line1, "Connexion à la base de donnée impériale en cours :", () => {
-        status1.style.display = "block";
-        updatePercentage(line2, "Authentification en cours :", () => {
-          status2.style.display = "block";
-        });
-      });
-    }
-
-    window.addEventListener("load", startSequence);
-  </script>
-</body>
-</html>
+      },
