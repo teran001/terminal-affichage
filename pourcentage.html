@@ -28,18 +28,41 @@
   </style>
 </head>
 <body>
-  <div id="terminal"></div>
+  <div id="terminal">
+    <div id="line1"></div>
+    <div id="status1" class="green" style="display: none;">Connexion établie</div>
+    <div id="line2"></div>
+    <div id="status2" class="green blink" style="display: none;">Authentification confirmée</div>
+  </div>
 
   <script>
-    const terminal = document.getElementById("terminal");
+    const line1 = document.getElementById("line1");
+    const line2 = document.getElementById("line2");
+    const status1 = document.getElementById("status1");
+    const status2 = document.getElementById("status2");
 
-    function simulateProgress(label, callback) {
+    function updatePercentage(lineElement, label, callback) {
       let percent = 0;
-      const line = document.createElement("div");
-      terminal.appendChild(line);
-
       const interval = setInterval(() => {
-        line.textContent = `${label} ${percent}%`;
+        lineElement.textContent = `${label} ${percent}%`;
         percent++;
         if (percent > 100) {
-          clearInterval
+          clearInterval(interval);
+          callback();
+        }
+      }, 30); // ajustable
+    }
+
+    function startSequence() {
+      updatePercentage(line1, "Connexion à la base de donnée impériale en cours :", () => {
+        status1.style.display = "block";
+        updatePercentage(line2, "Authentification en cours :", () => {
+          status2.style.display = "block";
+        });
+      });
+    }
+
+    window.addEventListener("load", startSequence);
+  </script>
+</body>
+</html>
