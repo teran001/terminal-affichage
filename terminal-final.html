@@ -24,47 +24,24 @@
   </style>
 </head>
 <body>
-  <div>
-    <span>Connexion à la base de donnée impériale en cours : </span><span id="conn">0%</span>
-  </div>
-  <div id="conn-ok" class="green" style="display:none;">Connexion établie</div>
+  <div id="terminal">
+    <!-- Connexion -->
+    <div id="conn-block">
+      <span>Connexion à la base de donnée impériale en cours : </span><span id="conn">0%</span>
+    </div>
+    <div id="conn-ok" class="green" style="display:none;">Connexion établie</div>
 
-  <div id="auth-block" style="margin-top:1em; display:none;">
-    <span>Authentification en cours : </span><span id="auth">0%</span>
+    <!-- Authentification (cachée au départ) -->
+    <div id="auth-block" style="margin-top:1em; display:none;">
+      <span>Authentification en cours : </span><span id="auth">0%</span>
+    </div>
+    <div id="auth-ok" class="green blink" style="display:none;">Authentification confirmée</div>
   </div>
-  <div id="auth-ok" class="green blink" style="display:none;">Authentification confirmée</div>
 
   <script>
-    function animateProgress(span, endTextId, callback) {
+    function animate(spanId, statusId, onComplete) {
       let percent = 0;
-      const interval = setInterval(() => {
-        span.textContent = percent + "%";
-        percent++;
-        if (percent > 100) {
-          clearInterval(interval);
-          document.getElementById(endTextId).style.display = "block";
-          if (callback) callback();
-        }
-      }, 30);
-    }
+      const span = document.getElementById(spanId);
+      const status = document.getElementById(statusId);
 
-    window.onload = () => {
-      // Étape 1 : Connexion
-      animateProgress(
-        document.getElementById("conn"),
-        "conn-ok",
-        () => {
-          // Afficher bloc authentification
-          document.getElementById("auth-block").style.display = "block";
-
-          // Étape 2 : Authentification
-          animateProgress(
-            document.getElementById("auth"),
-            "auth-ok"
-          );
-        }
-      );
-    };
-  </script>
-</body>
-</html>
+      const interval = set
