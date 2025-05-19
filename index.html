@@ -37,34 +37,34 @@
 
     let lineIndex = 0;
     let charIndex = 0;
-    let typingLine = null;
+    let leftSpan = null;
+    let rightSpan = null;
 
     function typeLine() {
       if (lineIndex >= lines.length) return;
 
       const line = lines[lineIndex];
 
-      // Si on commence une nouvelle ligne
-      if (!typingLine) {
-        typingLine = document.createElement("div");
-        terminal.appendChild(typingLine);
+      if (charIndex === 0) {
+        // Création d’un conteneur de ligne
+        const lineDiv = document.createElement("div");
+        leftSpan = document.createElement("span");
+        rightSpan = document.createElement("span");
+        rightSpan.style.color = line.color;
+
+        lineDiv.appendChild(leftSpan);
+        lineDiv.appendChild(rightSpan);
+        terminal.appendChild(lineDiv);
       }
 
       if (charIndex < line.left.length) {
-        typingLine.textContent += line.left.charAt(charIndex);
+        leftSpan.textContent += line.left.charAt(charIndex);
         charIndex++;
         setTimeout(typeLine, 10);
       } else {
-        const statusSpan = document.createElement("span");
-        statusSpan.textContent = line.right;
-        statusSpan.style.color = line.color;
-        typingLine.appendChild(statusSpan);
-
-        // Préparer la prochaine ligne
-        lineIndex++;
+        rightSpan.textContent = line.right;
         charIndex = 0;
-        typingLine = null;
-
+        lineIndex++;
         setTimeout(typeLine, 400);
       }
     }
