@@ -14,6 +14,16 @@
     }
     .yellow { color: #FFD700; }
     .green { color: lime; }
+    #cursor {
+      display: inline-block;
+      width: 10px;
+      background: #fff;
+      margin-left: 5px;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink {
+      50% { background: transparent; }
+    }
   </style>
 </head>
 <body>
@@ -24,44 +34,48 @@
 
     const lines = [
       {
-        text: "Connexion à la base de donnée impériale..................................................",
-        status: "EN COURS",
+        left: "Connexion à la base de donnée impériale..................................................",
+        right: "EN COURS",
         color: "yellow"
       },
       {
-        text: "Authentification..........................................................................",
-        status: "REUSSIE",
+        left: "Authentification..........................................................................",
+        right: "REUSSIE",
         color: "green"
       }
     ];
 
-    let lineIndex = 0;
+    let currentLineIndex = 0;
     let charIndex = 0;
-    let currentLine = '';
-    let isStatusDisplayed = false;
 
-    function typeLine() {
-      if (lineIndex >= lines.length) return;
+    function typeNextChar() {
+      if (currentLineIndex >= lines.length) {
+        // Curseur clignotant après la dernière ligne
+        const cursor = document.createElement("span");
+        cursor.id = "cursor";
+        terminal.appendChild(cursor);
+        return;
+      }
 
-      const line = lines[lineIndex];
-
-      if (charIndex < line.text.length) {
-        terminal.innerHTML += line.text.charAt(charIndex);
+      const line = lines[currentLineIndex];
+      const fullText = line.left;
+      if (charIndex < fullText.length) {
+        terminal.innerText += fullText.charAt(charIndex);
         charIndex++;
-        setTimeout(typeLine, 10);
-      } else if (!isStatusDisplayed) {
-        terminal.innerHTML += `<span class="${line.color}">${line.status}</span>\n`;
-        isStatusDisplayed = true;
-        setTimeout(() => {
-          lineIndex++;
-          charIndex = 0;
-          isStatusDisplayed = false;
-          typeLine();
-        }, 400);
+        setTimeout(typeNextChar, 10);
+      } else {
+        const span = document.createElement("span");
+        span.className = line.color;
+        span.textContent = line.right;
+        terminal.appendChild(span);
+        terminal.innerHTML += "\n";
+        charIndex = 0;
+        currentLineIndex++;
+        setTimeout(typeNextChar, 300);
       }
     }
 
-    window.addEventListener("load", typeLine);
+    window.addEventListener("load", typeNextChar);
   </script>
 </body>
 </html>
