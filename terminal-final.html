@@ -29,13 +29,13 @@
   </div>
   <div id="conn-ok" class="green" style="display:none;">Connexion établie</div>
 
-  <div style="margin-top:1em;">
+  <div id="auth-block" style="margin-top:1em; display:none;">
     <span>Authentification en cours : </span><span id="auth">0%</span>
   </div>
   <div id="auth-ok" class="green blink" style="display:none;">Authentification confirmée</div>
 
   <script>
-    function animateProgress(span, endTextId, onDone) {
+    function animateProgress(span, endTextId, callback) {
       let percent = 0;
       const interval = setInterval(() => {
         span.textContent = percent + "%";
@@ -43,16 +43,26 @@
         if (percent > 100) {
           clearInterval(interval);
           document.getElementById(endTextId).style.display = "block";
-          if (onDone) onDone();
+          if (callback) callback();
         }
       }, 30);
     }
 
     window.onload = () => {
+      // Étape 1 : Connexion
       animateProgress(
         document.getElementById("conn"),
         "conn-ok",
-        () => animateProgress(document.getElementById("auth"), "auth-ok")
+        () => {
+          // Afficher bloc authentification
+          document.getElementById("auth-block").style.display = "block";
+
+          // Étape 2 : Authentification
+          animateProgress(
+            document.getElementById("auth"),
+            "auth-ok"
+          );
+        }
       );
     };
   </script>
