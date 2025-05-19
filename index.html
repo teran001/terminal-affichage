@@ -14,16 +14,6 @@
     }
     .yellow { color: #FFD700; }
     .green { color: lime; }
-    #cursor {
-      display: inline-block;
-      width: 10px;
-      background: #fff;
-      margin-left: 5px;
-      animation: blink 1s steps(1) infinite;
-    }
-    @keyframes blink {
-      50% { background: transparent; }
-    }
   </style>
 </head>
 <body>
@@ -34,48 +24,37 @@
 
     const lines = [
       {
-        left: "Connexion à la base de donnée impériale..................................................",
-        right: "EN COURS",
-        color: "yellow"
+        text: "Connexion à la base de donnée impériale..................................................",
+        colored: "<span class='yellow'>EN COURS</span>"
       },
       {
-        left: "Authentification..........................................................................",
-        right: "REUSSIE",
-        color: "green"
+        text: "Authentification..........................................................................",
+        colored: "<span class='green'>REUSSIE</span>"
       }
     ];
 
-    let currentLineIndex = 0;
+    let lineIndex = 0;
     let charIndex = 0;
 
-    function typeNextChar() {
-      if (currentLineIndex >= lines.length) {
-        // Curseur clignotant après la dernière ligne
-        const cursor = document.createElement("span");
-        cursor.id = "cursor";
-        terminal.appendChild(cursor);
-        return;
-      }
+    function typeLine() {
+      if (lineIndex >= lines.length) return;
 
-      const line = lines[currentLineIndex];
-      const fullText = line.left;
-      if (charIndex < fullText.length) {
-        terminal.innerText += fullText.charAt(charIndex);
+      const { text, colored } = lines[lineIndex];
+
+      if (charIndex < text.length) {
+        terminal.innerHTML += text.charAt(charIndex);
         charIndex++;
-        setTimeout(typeNextChar, 10);
+        setTimeout(typeLine, 10);
       } else {
-        const span = document.createElement("span");
-        span.className = line.color;
-        span.textContent = line.right;
-        terminal.appendChild(span);
-        terminal.innerHTML += "\n";
+        // À la fin de la ligne, on ajoute le texte coloré en HTML interprété
+        terminal.innerHTML += colored + "<br>";
         charIndex = 0;
-        currentLineIndex++;
-        setTimeout(typeNextChar, 300);
+        lineIndex++;
+        setTimeout(typeLine, 400);
       }
     }
 
-    window.addEventListener("load", typeNextChar);
+    window.addEventListener("load", typeLine);
   </script>
 </body>
 </html>
