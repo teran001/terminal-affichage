@@ -1,7 +1,7 @@
-<div id="terminal" style="background:black; color:white; font-family:monospace; padding:20px; font-size:1.2em; white-space:pre;"></div>
+<div id="terminal" style="background:black; color:white; font-family:monospace; padding:20px; font-size:1.2em; white-space:pre-line;"></div>
 <div id="static" style="display:none;">
 Connexion à la base de donnée impériale..................................................<span style="color:#FFD700;">EN COURS</span><br>
-Authentification..........................................................................<span style="color:lime;">REUSSIE</span><br>
+Authentification..........................................................................<span style="color:lime;">REUSSIE</span>
 </div>
 
 <script>
@@ -17,7 +17,7 @@ function typeEffect() {
     index++;
     setTimeout(typeEffect, 10);
   } else {
-    // Afficher le reste avec HTML déjà prêt
+    // Une fois l’animation finie, afficher le vrai contenu avec couleurs et sauts de ligne
     terminal.innerHTML = staticContent;
   }
 }
