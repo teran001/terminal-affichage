@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Terminal impérial</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: monospace;
+      padding: 20px;
+      font-size: 1.2em;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+
+  <script>
+    const terminal = document.getElementById("terminal");
+    const lines = [
+      "Connexion à la base de donnée impériale.......................................................<span style='color:yellow;'>EN COURS</span>",
+      "Authentification................................................................................................<span style='color:lime;'>REUSSIE</span>"
+    ];
+    let lineIndex = 0;
+    let charIndex = 0;
+    let currentLine = '';
+    let tempLine = '';
+
+    function typeLine() {
+      if (lineIndex >= lines.length) return;
+      currentLine = lines[lineIndex];
+      if (charIndex < currentLine.length) {
+        const char = currentLine.charAt(charIndex);
+        tempLine += char;
+        terminal.innerHTML = terminal.innerHTML.replace(/<\/?span.*?>/g, '') + char;
+        charIndex++;
+        setTimeout(typeLine, 15);
+      } else {
+        terminal.innerHTML = terminal.innerHTML.slice(0, -tempLine.length) + currentLine + "\n";
+        tempLine = '';
+        charIndex = 0;
+        lineIndex++;
+        setTimeout(typeLine, 500);
+      }
+    }
+
+    window.addEventListener("load", typeLine);
+  </script>
+</body>
+</html>
