@@ -1,26 +1,75 @@
-<div id="terminal" style="background:black; color:white; font-family:monospace; padding:20px; font-size:1.2em; white-space:pre-line;"></div>
-<div id="static" style="display:none;">
-Connexion à la base de donnée impériale..................................................<span style="color:#FFD700;">EN COURS</span><br>
-Authentification..........................................................................<span style="color:lime;">REUSSIE</span>
-</div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Terminal impérial</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: monospace;
+      padding: 20px;
+      font-size: 1.2em;
+      white-space: pre;
+    }
+    .yellow { color: #FFD700; }
+    .green { color: lime; }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
 
-<script>
-const terminal = document.getElementById("terminal");
-const staticContent = document.getElementById("static").innerHTML;
+  <script>
+    const terminal = document.getElementById("terminal");
 
-let currentText = "Connexion à la base de donnée impériale..................................................";
-let index = 0;
+    const lines = [
+      {
+        left: "Connexion à la base de donnée impériale..................................................",
+        right: "EN COURS",
+        color: "#FFD700"
+      },
+      {
+        left: "Authentification..........................................................................",
+        right: "REUSSIE",
+        color: "lime"
+      }
+    ];
 
-function typeEffect() {
-  if (index < currentText.length) {
-    terminal.textContent += currentText.charAt(index);
-    index++;
-    setTimeout(typeEffect, 10);
-  } else {
-    // Une fois l’animation finie, afficher le vrai contenu avec couleurs et sauts de ligne
-    terminal.innerHTML = staticContent;
-  }
-}
+    let lineIndex = 0;
+    let charIndex = 0;
+    let typingLine = null;
 
-window.addEventListener("load", typeEffect);
-</script>
+    function typeLine() {
+      if (lineIndex >= lines.length) return;
+
+      const line = lines[lineIndex];
+
+      // Si on commence une nouvelle ligne
+      if (!typingLine) {
+        typingLine = document.createElement("div");
+        terminal.appendChild(typingLine);
+      }
+
+      if (charIndex < line.left.length) {
+        typingLine.textContent += line.left.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeLine, 10);
+      } else {
+        const statusSpan = document.createElement("span");
+        statusSpan.textContent = line.right;
+        statusSpan.style.color = line.color;
+        typingLine.appendChild(statusSpan);
+
+        // Préparer la prochaine ligne
+        lineIndex++;
+        charIndex = 0;
+        typingLine = null;
+
+        setTimeout(typeLine, 400);
+      }
+    }
+
+    window.addEventListener("load", typeLine);
+  </script>
+</body>
+</html>
