@@ -1,60 +1,44 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Terminal impérial</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: monospace;
-      padding: 20px;
-      font-size: 1.2em;
-      white-space: pre;
-    }
-    .yellow { color: #FFD700; }
-    .green { color: lime; }
-  </style>
-</head>
-<body>
-  <div id="terminal"></div>
+<div id="terminal" style="background:black; color:white; font-family:monospace; padding:20px; font-size:1.2em; white-space:pre;"></div>
+<script>
+const terminal = document.getElementById("terminal");
 
-  <script>
-    const terminal = document.getElementById("terminal");
+const lines = [
+  {
+    text: "Connexion à la base de donnée impériale..................................................",
+    status: "EN COURS",
+    color: "#FFD700"
+  },
+  {
+    text: "Authentification..........................................................................",
+    status: "REUSSIE",
+    color: "lime"
+  }
+];
 
-    const lines = [
-      {
-        text: "Connexion à la base de donnée impériale..................................................",
-        colored: "<span class='yellow'>EN COURS</span>"
-      },
-      {
-        text: "Authentification..........................................................................",
-        colored: "<span class='green'>REUSSIE</span>"
-      }
-    ];
+let lineIndex = 0;
+let charIndex = 0;
 
-    let lineIndex = 0;
-    let charIndex = 0;
+function typeLine() {
+  if (lineIndex >= lines.length) return;
 
-    function typeLine() {
-      if (lineIndex >= lines.length) return;
+  const line = lines[lineIndex];
+  if (charIndex < line.text.length) {
+    terminal.textContent += line.text.charAt(charIndex);
+    charIndex++;
+    setTimeout(typeLine, 10);
+  } else {
+    const span = document.createElement("span");
+    span.textContent = line.status;
+    span.style.color = line.color;
 
-      const { text, colored } = lines[lineIndex];
+    terminal.appendChild(span);
+    terminal.appendChild(document.createElement("br"));
 
-      if (charIndex < text.length) {
-        terminal.innerHTML += text.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeLine, 10);
-      } else {
-        // À la fin de la ligne, on ajoute le texte coloré en HTML interprété
-        terminal.innerHTML += colored + "<br>";
-        charIndex = 0;
-        lineIndex++;
-        setTimeout(typeLine, 400);
-      }
-    }
+    charIndex = 0;
+    lineIndex++;
+    setTimeout(typeLine, 400);
+  }
+}
 
-    window.addEventListener("load", typeLine);
-  </script>
-</body>
-</html>
+window.addEventListener("load", typeLine);
+</script>
