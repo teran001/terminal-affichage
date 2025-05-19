@@ -35,40 +35,11 @@
 
     function simulateProgress(label, callback) {
       let percent = 0;
+      const line = document.createElement("div");
+      terminal.appendChild(line);
 
-      function step() {
-        const line = document.createElement("div");
+      const interval = setInterval(() => {
         line.textContent = `${label} ${percent}%`;
-        terminal.appendChild(line);
         percent++;
-        if (percent <= 100) {
-          setTimeout(step, 20); // vitesse du pourcentage
-        } else {
-          callback();
-        }
-      }
-
-      step();
-    }
-
-    function showMessage(text, color, blink = false) {
-      const msg = document.createElement("div");
-      msg.textContent = text;
-      msg.classList.add(color);
-      if (blink) msg.classList.add("blink");
-      terminal.appendChild(msg);
-    }
-
-    function startSequence() {
-      simulateProgress("Connexion à la base de donnée impériale en cours :", () => {
-        showMessage("Connexion établie", "green");
-        simulateProgress("Authentification en cours :", () => {
-          showMessage("Authentification confirmée", "green", true);
-        });
-      });
-    }
-
-    window.addEventListener("load", startSequence);
-  </script>
-</body>
-</html>
+        if (percent > 100) {
+          clearInterval
