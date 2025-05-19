@@ -12,7 +12,7 @@
       font-size: 1.2em;
       white-space: pre;
     }
-    .yellow { color: #FFD700; } /* Jaune or */
+    .yellow { color: #FFD700; }
     .green { color: lime; }
   </style>
 </head>
@@ -24,38 +24,40 @@
 
     const lines = [
       {
-        left: "Connexion à la base de donnée impériale",
-        right: "<span class='yellow'>EN COURS</span>"
+        text: "Connexion à la base de donnée impériale..................................................",
+        status: "EN COURS",
+        color: "yellow"
       },
       {
-        left: "Authentification",
-        right: "<span class='green'>REUSSIE</span>"
+        text: "Authentification..........................................................................",
+        status: "REUSSIE",
+        color: "green"
       }
     ];
-
-    const totalWidth = 80; // Largeur cible en caractères
 
     let lineIndex = 0;
     let charIndex = 0;
     let currentLine = '';
-    let isTypingEnd = false;
+    let isStatusDisplayed = false;
 
     function typeLine() {
       if (lineIndex >= lines.length) return;
 
-      const { left, right } = lines[lineIndex];
-      const paddingLength = totalWidth - left.length - right.replace(/<[^>]*>/g, '').length;
-      const paddedLine = left + ' '.repeat(Math.max(paddingLength, 1)) + right;
+      const line = lines[lineIndex];
 
-      if (charIndex < paddedLine.length) {
-        terminal.innerHTML += paddedLine.charAt(charIndex);
+      if (charIndex < line.text.length) {
+        terminal.innerHTML += line.text.charAt(charIndex);
         charIndex++;
         setTimeout(typeLine, 10);
-      } else {
-        terminal.innerHTML += '\n';
-        charIndex = 0;
-        lineIndex++;
-        setTimeout(typeLine, 300);
+      } else if (!isStatusDisplayed) {
+        terminal.innerHTML += `<span class="${line.color}">${line.status}</span>\n`;
+        isStatusDisplayed = true;
+        setTimeout(() => {
+          lineIndex++;
+          charIndex = 0;
+          isStatusDisplayed = false;
+          typeLine();
+        }, 400);
       }
     }
 
