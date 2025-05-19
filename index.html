@@ -10,9 +10,9 @@
       font-family: monospace;
       padding: 20px;
       font-size: 1.2em;
-      white-space: pre-line;
+      white-space: pre;
     }
-    .yellow { color: #FFD700; } /* Jaune or, bien lisible */
+    .yellow { color: #FFD700; } /* Jaune or */
     .green { color: lime; }
   </style>
 </head>
@@ -23,32 +23,39 @@
     const terminal = document.getElementById("terminal");
 
     const lines = [
-      { text: "Connexion à la base de donnée impériale.......................................................", end: "EN COURS", class: "yellow" },
-      { text: "Authentification................................................................................................", end: "REUSSIE", class: "green" }
+      {
+        left: "Connexion à la base de donnée impériale",
+        right: "<span class='yellow'>EN COURS</span>"
+      },
+      {
+        left: "Authentification",
+        right: "<span class='green'>REUSSIE</span>"
+      }
     ];
+
+    const totalWidth = 80; // Largeur cible en caractères
 
     let lineIndex = 0;
     let charIndex = 0;
+    let currentLine = '';
     let isTypingEnd = false;
 
     function typeLine() {
       if (lineIndex >= lines.length) return;
 
-      const line = lines[lineIndex];
+      const { left, right } = lines[lineIndex];
+      const paddingLength = totalWidth - left.length - right.replace(/<[^>]*>/g, '').length;
+      const paddedLine = left + ' '.repeat(Math.max(paddingLength, 1)) + right;
 
-      if (charIndex < line.text.length) {
-        terminal.innerHTML += line.text.charAt(charIndex);
+      if (charIndex < paddedLine.length) {
+        terminal.innerHTML += paddedLine.charAt(charIndex);
         charIndex++;
-        setTimeout(typeLine, 15);
-      } else if (!isTypingEnd) {
-        terminal.innerHTML += `<span class="${line.class}">${line.end}</span>\n`;
-        isTypingEnd = true;
-        setTimeout(() => {
-          lineIndex++;
-          charIndex = 0;
-          isTypingEnd = false;
-          typeLine();
-        }, 500);
+        setTimeout(typeLine, 10);
+      } else {
+        terminal.innerHTML += '\n';
+        charIndex = 0;
+        lineIndex++;
+        setTimeout(typeLine, 300);
       }
     }
 
