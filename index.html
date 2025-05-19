@@ -1,44 +1,26 @@
 <div id="terminal" style="background:black; color:white; font-family:monospace; padding:20px; font-size:1.2em; white-space:pre;"></div>
+<div id="static" style="display:none;">
+Connexion à la base de donnée impériale..................................................<span style="color:#FFD700;">EN COURS</span><br>
+Authentification..........................................................................<span style="color:lime;">REUSSIE</span><br>
+</div>
+
 <script>
 const terminal = document.getElementById("terminal");
+const staticContent = document.getElementById("static").innerHTML;
 
-const lines = [
-  {
-    text: "Connexion à la base de donnée impériale..................................................",
-    status: "EN COURS",
-    color: "#FFD700"
-  },
-  {
-    text: "Authentification..........................................................................",
-    status: "REUSSIE",
-    color: "lime"
-  }
-];
+let currentText = "Connexion à la base de donnée impériale..................................................";
+let index = 0;
 
-let lineIndex = 0;
-let charIndex = 0;
-
-function typeLine() {
-  if (lineIndex >= lines.length) return;
-
-  const line = lines[lineIndex];
-  if (charIndex < line.text.length) {
-    terminal.textContent += line.text.charAt(charIndex);
-    charIndex++;
-    setTimeout(typeLine, 10);
+function typeEffect() {
+  if (index < currentText.length) {
+    terminal.textContent += currentText.charAt(index);
+    index++;
+    setTimeout(typeEffect, 10);
   } else {
-    const span = document.createElement("span");
-    span.textContent = line.status;
-    span.style.color = line.color;
-
-    terminal.appendChild(span);
-    terminal.appendChild(document.createElement("br"));
-
-    charIndex = 0;
-    lineIndex++;
-    setTimeout(typeLine, 400);
+    // Afficher le reste avec HTML déjà prêt
+    terminal.innerHTML = staticContent;
   }
 }
 
-window.addEventListener("load", typeLine);
+window.addEventListener("load", typeEffect);
 </script>
