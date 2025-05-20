@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Bienvenue</title>
+  <style>
+    body { font-family: sans-serif; background: #02091f; color: white; text-align: center; padding-top: 100px; }
+  </style>
+</head>
+<body>
+  <h1 id="salut">Bienvenue</h1>
+
+  <script>
+    const nom = localStorage.getItem("pseudo");
+    if (nom) {
+      document.getElementById("salut").innerText = `Bienvenue, ${nom} !`;
+    } else {
+      location.href = "index.html"; // retour si pas d'identifiant
+    }
+  </script>
+</body>
+</html>
