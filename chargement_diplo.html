@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Terminal impérial</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: monospace;
+      font-size: 1.2em;
+      padding: 20px;
+    }
+    .green {
+      color: lime;
+    }
+    .blink {
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <span>Chargement des données  diplomatique en cours : : </span><span id="conn">0%</span>
+  </div>
+  <div id="conn-ok" class="green" style="display:none;">Chargement terminé</div>
+
+  <div id="auth-block" style="margin-top:1em; display:none;">
+    <span>Décryptage en cours </span><span id="auth">0%</span>
+  </div>
+  <div id="auth-ok" class="green blink" style="display:none;">Décryptage achevé</div>
+
+  <script>
+    function animate(spanId, statusId, onComplete) {
+      const span = document.getElementById(spanId);
+      const status = document.getElementById(statusId);
+      let percent = 0;
+
+      function step() {
+        span.textContent = percent + "%";
+        percent++;
+        if (percent <= 100) {
+          setTimeout(step, 30); // plus stable que setInterval dans IONOS
+        } else {
+          status.style.display = "block";
+          if (onComplete) onComplete();
+        }
+      }
+
+      step();
+    }
+
+    window.onload = () => {
+      animate("conn", "conn-ok", () => {
+        document.getElementById("auth-block").style.display = "block";
+        animate("auth", "auth-ok");
+      });
+    };
+  </script>
+</body>
+</html>
